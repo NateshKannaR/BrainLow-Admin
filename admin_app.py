@@ -229,6 +229,11 @@ def delete_training(training_id):
     flash('Training data deleted successfully')
     return redirect(url_for('train_ai'))
 
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('index'))
+
 @app.route('/admin_practice_quiz', methods=['GET', 'POST'])
 def admin_practice_quiz():
     if 'admin_id' not in session:
@@ -236,7 +241,6 @@ def admin_practice_quiz():
     
     if request.method == 'POST':
         if 'csv_file' in request.files and request.files['csv_file'].filename:
-            # CSV Upload
             file = request.files['csv_file']
             if file.filename.endswith('.csv'):
                 import csv
@@ -245,77 +249,31 @@ def admin_practice_quiz():
                 stream = StringIO(file.stream.read().decode("UTF8"), newline=None)
                 csv_input = csv.DictReader(stream)
                 
-                title = request.form['csv_title']
-                category = request.form['csv_category']
-                difficulty = request.form['csv_difficulty']
-                questions = []
-                
                 for row in csv_input:
-                    if all(key in row for key in ['question', 'option_a', 'option_b', 'option_c', 'option_d', 'correct_answer']):
-                        question = {
+                    if 'question' in row and 'answer' in row:
+                        db.quiz_questions.insert_one({
                             'question': row['question'],
-                            'options': [row['option_a'], row['option_b'], row['option_c'], row['option_d']],
-                            'correct_answer': int(row['correct_answer'])
-                        }
-                        questions.append(question)
+                            'answer': row['answer'],
+                            'created_at': datetime.now()
+                        })
                 
-                if questions:
-                    db.practice_quizzes.insert_one({
-                        'title': title,
-                        'category': category,
-                        'difficulty': difficulty,
-                        'questions': questions,
-                        'created_by': ObjectId(session['admin_id']),
-                        'created_at': datetime.now()
-                    })
-                    flash(f'Practice quiz created from CSV with {len(questions)} questions')
-                else:
-                    flash('No valid questions found in CSV')
-            else:
-                flash('Please upload a CSV file')
+                flash('Quiz questions uploaded successfully')
         else:
-            # Manual Form
-            title = request.form['title']
-            category = request.form['category']
-            difficulty = request.form['difficulty']
-            questions = []
+            question = request.form['question']
+            answer = request.form['answer']
             
-            i = 0
-            while f'question_{i}' in request.form:
-                question = {
-                    'question': request.form[f'question_{i}'],
-                    'options': [
-                        request.form[f'option_{i}_0'],
-                        request.form[f'option_{i}_1'],
-                        request.form[f'option_{i}_2'],
-                        request.form[f'option_{i}_3']
-                    ],
-                    'correct_answer': int(request.form[f'correct_{i}'])
-                }
-                questions.append(question)
-                i += 1
-            
-            db.practice_quizzes.insert_one({
-                'title': title,
-                'category': category,
-                'difficulty': difficulty,
-                'questions': questions,
-                'created_by': ObjectId(session['admin_id']),
+            db.quiz_questions.insert_one({
+                'question': question,
+                'answer': answer,
                 'created_at': datetime.now()
             })
             
-            flash('Practice quiz created successfully')
+            flash('Quiz question added successfully')
         
         return redirect(url_for('admin_practice_quiz'))
     
-    quizzes = list(db.practice_quizzes.find().sort('created_at', -1))
-    return render_template('admin_practice_quiz.html', quizzes=quizzes)
-
-@app.route('/logout')
-def logout():
-    session.clear()
-    return redirect(url_for('index'))
+    quiz_questions = list(db.quiz_questions.find().sort('created_at', -1))
+    return render_template('admin_practice_quiz.html', quiz_questions=quiz_questions)
 
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5001))
-    app.run(host='0.0.0.0', port=port, debug=False)
+    app.run(debug=True, port=5001)

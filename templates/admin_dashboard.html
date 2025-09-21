@@ -7,162 +7,255 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="{{ url_for('static', filename='css/themes.css') }}" rel="stylesheet">
-    <style>
-        body { font-family: 'Inter', sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; }
-        .navbar { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .card { border: none; border-radius: 15px; box-shadow: 0 8px 25px rgba(0,0,0,0.1); transition: transform 0.3s ease; }
-        .card:hover { transform: translateY(-5px); }
-        .card-header-teachers { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: white; border-radius: 15px 15px 0 0; }
-        .card-header-students { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 15px 15px 0 0; }
-        .btn { border-radius: 25px; transition: all 0.3s ease; }
-        .btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
-    </style>
+    <link href="{{ url_for('static', filename='css/admin-style.css') }}" rel="stylesheet">
 </head>
 <body>
-    <nav class="navbar navbar-dark">
-        <div class="container-fluid mx-4">
-            <span class="navbar-brand"><i class="fas fa-shield-alt me-2"></i>BrainLow Admin Panel</span>
-            <div class="d-flex align-items-center">
-                <span class="text-white me-3">{{ session.admin_name }}</span>
-                <div class="dropdown me-2">
-                    <button class="btn btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                        <i class="fas fa-bell me-1"></i>Notifications
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="{{ url_for('view_notifications') }}">View All</a></li>
+    <div class="dashboard-container">
+        <div class="row g-0">
+            <!-- Sidebar -->
+            <div class="col-lg-3">
+                <div class="sidebar">
+                    <div class="sidebar-brand">
+                        <div class="stat-icon primary mx-auto mb-3" style="width: 60px; height: 60px;">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                            </svg>
+                        </div>
+                        <h4 class="fw-bold mb-1">BrainLow</h4>
+                        <p class="text-muted small mb-0">Admin Panel</p>
+                    </div>
+                    
+                    <ul class="sidebar-nav">
+                        <li><a href="{{ url_for('dashboard') }}" class="active">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" class="me-3">
+                                <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
+                            </svg> Dashboard
+                        </a></li>
+                        <li><a href="{{ url_for('bulk_upload') }}">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" class="me-3">
+                                <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                            </svg> Data Import
+                        </a></li>
+                        <li><a href="{{ url_for('view_notifications') }}">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" class="me-3">
+                                <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/>
+                            </svg> Notifications
+                        </a></li>
+                        <li><a href="{{ url_for('train_ai') }}">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" class="me-3">
+                                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg> AI Training
+                        </a></li>
+                        <li><a href="{{ url_for('admin_practice_quiz') }}">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" class="me-3">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                            </svg> Quiz
+                        </a></li>
+                        <li><a href="{{ url_for('logout') }}">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" class="me-3">
+                                <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.59L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
+                            </svg> Sign Out
+                        </a></li>
                     </ul>
+                    
+                    <div class="text-center mt-4 px-3">
+                        <div class="bg-light rounded p-3">
+                            <i class="fas fa-user-tie text-primary mb-2"></i>
+                            <p class="small mb-1 fw-bold">{{ session.admin_name }}</p>
+                            <p class="small text-muted mb-0">System Administrator</p>
+                        </div>
+                    </div>
                 </div>
-                <a href="{{ url_for('train_ai') }}" class="btn btn-outline-light me-2">
-                    <i class="fas fa-robot me-1"></i>Train AI
-                </a>
-                <a href="{{ url_for('admin_practice_quiz') }}" class="btn btn-outline-light me-2">
-                    <i class="fas fa-brain me-1"></i>Practice Quiz
-                </a>
-                <a href="{{ url_for('logout') }}" class="btn btn-outline-light">Logout</a>
             </div>
-        </div>
-    </nav>
-
-    <div class="container-fluid mt-5">
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                {% for message in messages %}
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        {{ message }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
-
-        <div class="row g-4">
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header card-header-teachers d-flex justify-content-between align-items-center">
-                        <div>
-                            <h5 class="mb-0"><i class="fas fa-chalkboard-teacher me-2"></i>Teachers Management</h5>
-                            <small class="text-white-50">({{ all_teachers|length }} teachers registered)</small>
-                        </div>
-                        <div class="d-flex gap-2">
-                            <button class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#addTeacherModal">
-                                <i class="fas fa-plus me-1"></i> Add Teacher
-                            </button>
-                            <a href="{{ url_for('bulk_upload') }}?type=teacher" class="btn btn-outline-light">
-                                <i class="fas fa-upload me-1"></i> Teacher CSV
-                            </a>
-                        </div>
-                    </div>
-                    <div class="card-body" style="max-height: 400px; overflow-y: auto;">
-                        {% if all_teachers %}
-                            <div class="table-responsive">
-                                <table class="table table-sm table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Username</th>
-                                            <th>Password</th>
-                                            <th>Date</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for teacher in all_teachers %}
-                                        <tr>
-                                            <td>{{ teacher.full_name }}</td>
-                                            <td>{{ teacher.username }}</td>
-                                            <td><span class="text-muted">{{ teacher.plain_password or 'N/A' }}</span></td>
-                                            <td>{{ teacher.created_at.strftime('%Y-%m-%d') }}</td>
-                                            <td>
-                                                <a href="{{ url_for('delete_user', user_id=teacher._id) }}" 
-                                                   class="btn btn-danger btn-sm"
-                                                   onclick="return confirm('Delete this teacher?')">
-                                                    <i class="fas fa-trash"></i>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
+            
+            <!-- Main Content -->
+            <div class="col-lg-9">
+                <div class="main-content">
+                    <!-- Header -->
+                    <div class="content-header">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h1 class="h3 mb-1">Learning Analytics</h1>
+                                <p class="text-muted mb-0">AI-Powered Education Platform</p>
                             </div>
-                        {% else %}
-                            <p class="text-center text-muted">No teachers found</p>
-                        {% endif %}
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addTeacherModal">
+                                    <i class="fas fa-user-plus me-1"></i> Register Instructor
+                                </button>
+                                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addStudentModal">
+                                    <i class="fas fa-user-plus me-1"></i> Register Learner
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
+                    <!-- Stats Cards -->
+                    <div class="row g-4 mb-4">
+                        <div class="col-md-4">
+                            <div class="stat-card">
+                                <div class="stat-icon primary">
+                                    <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                                    </svg>
+                                </div>
+                                <h3 class="fw-bold mb-1">{{ all_teachers|length }}</h3>
+                                <p class="text-muted mb-0">Instructors</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="stat-card">
+                                <div class="stat-icon success">
+                                    <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M16 4c0-1.11.89-2 2-2s2 .89 2 2-.89 2-2 2-2-.89-2-2zm4 18v-6h2.5l-2.54-7.63A1.5 1.5 0 0 0 18.54 8H16c-.8 0-1.54.37-2.01 1l-2.7 3.6L12 11l2.5-3.2c.94-1.2 2.4-1.8 3.9-1.8h2.1c1.86 0 3.42 1.33 3.84 3.16L22 16v6h-2zm-7.5-10.5c.83 0 1.5-.67 1.5-1.5s-.67-1.5-1.5-1.5S11 9.17 11 10s.67 1.5 1.5 1.5zM5.5 6c1.11 0 2-.89 2-2s-.89-2-2-2-2 .89-2 2 .89 2 2 2zm1.5 1H5c-.8 0-1.54.37-2.01 1l-2.7 3.6L1 10l2.5-3.2C4.44 5.6 5.9 5 7.4 5h2.1c.86 0 1.58.6 1.84 1.46L14 18v4h-2v-6l-2.05-5.2c-.42 1.53-1.75 2.7-3.45 2.7s-3.03-1.17-3.45-2.7L1 16v6H0v-4.5l2.54-7.63A1.5 1.5 0 0 1 4.46 9H7z"/>
+                                    </svg>
+                                </div>
+                                <h3 class="fw-bold mb-1">{{ all_students|length }}</h3>
+                                <p class="text-muted mb-0">Active Learners</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="stat-card">
+                                <div class="stat-icon secondary">
+                                    <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                                    </svg>
+                                </div>
+                                <h3 class="fw-bold mb-1">{{ pending_teachers|length }}</h3>
+                                <p class="text-muted mb-0">Pending Review</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    {% with messages = get_flashed_messages() %}
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                    <i class="fas fa-check-circle me-2"></i>{{ message }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
 
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header card-header-students d-flex justify-content-between align-items-center">
-                        <div>
-                            <h5 class="mb-0"><i class="fas fa-user-graduate me-2"></i>Students Management</h5>
-                            <small class="text-white-50">({{ all_students|length }} students registered)</small>
+                    <div class="row g-4">
+                        <div class="col-lg-6">
+                            <div class="table-card">
+                                <div class="d-flex justify-content-between align-items-center p-4 border-bottom">
+                                    <div>
+                                        <h5 class="mb-1"><i class="fas fa-user-tie me-2 text-primary"></i>Instructor Registry</h5>
+                                        <small class="text-muted">{{ all_teachers|length }} certified instructors</small>
+                                    </div>
+                                    <div class="d-flex gap-2">
+                                        <a href="{{ url_for('bulk_upload') }}?type=teacher" class="btn btn-outline-primary btn-sm">
+                                            <i class="fas fa-file-import me-1"></i> Batch Import
+                                        </a>
+                                    </div>
+                                </div>
+                                <div style="max-height: 400px; overflow-y: auto;">
+                                    {% if all_teachers %}
+                                        <table class="table table-hover mb-0">
+                                            <thead>
+                                                <tr>
+                                                    <th>Name</th>
+                                                    <th>Username</th>
+                                                    <th>Password</th>
+                                                    <th>Date</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for teacher in all_teachers %}
+                                                <tr>
+                                                    <td>
+                                                        <div class="d-flex align-items-center">
+                                                            <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 32px; height: 32px;">
+                                                                <i class="fas fa-user text-white small"></i>
+                                                            </div>
+                                                            {{ teacher.full_name }}
+                                                        </div>
+                                                    </td>
+                                                    <td><code>{{ teacher.username }}</code></td>
+                                                    <td><span class="badge bg-light text-dark">{{ teacher.plain_password or 'N/A' }}</span></td>
+                                                    <td><small class="text-muted">{{ teacher.created_at.strftime('%Y-%m-%d') }}</small></td>
+                                                    <td>
+                                                        <a href="{{ url_for('delete_user', user_id=teacher._id) }}" 
+                                                           class="btn btn-danger btn-sm"
+                                                           onclick="return confirm('Delete this teacher?')">
+                                                            <i class="fas fa-trash"></i>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    {% else %}
+                                        <div class="text-center py-5">
+                                            <i class="fas fa-user-tie fa-3x text-muted mb-3"></i>
+                                            <p class="text-muted">No instructors registered</p>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
                         </div>
-                        <div class="d-flex gap-2">
-                            <button class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#addStudentModal">
-                                <i class="fas fa-plus me-1"></i> Add Student
-                            </button>
-                            <a href="{{ url_for('bulk_upload') }}?type=student" class="btn btn-outline-light">
-                                <i class="fas fa-upload me-1"></i> Student CSV
-                            </a>
+
+                        <div class="col-lg-6">
+                            <div class="table-card">
+                                <div class="d-flex justify-content-between align-items-center p-4 border-bottom">
+                                    <div>
+                                        <h5 class="mb-1"><i class="fas fa-graduation-cap me-2 text-success"></i>Learner Directory</h5>
+                                        <small class="text-muted">{{ all_students|length }} active learners</small>
+                                    </div>
+                                    <div class="d-flex gap-2">
+                                        <a href="{{ url_for('bulk_upload') }}?type=student" class="btn btn-outline-success btn-sm">
+                                            <i class="fas fa-file-import me-1"></i> Batch Import
+                                        </a>
+                                    </div>
+                                </div>
+                                <div style="max-height: 400px; overflow-y: auto;">
+                                    {% if all_students %}
+                                        <table class="table table-hover mb-0">
+                                            <thead>
+                                                <tr>
+                                                    <th>Name</th>
+                                                    <th>Username</th>
+                                                    <th>Password</th>
+                                                    <th>Date</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for student in all_students %}
+                                                <tr>
+                                                    <td>
+                                                        <div class="d-flex align-items-center">
+                                                            <div class="bg-success rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 32px; height: 32px;">
+                                                                <i class="fas fa-user text-white small"></i>
+                                                            </div>
+                                                            {{ student.full_name }}
+                                                        </div>
+                                                    </td>
+                                                    <td><code>{{ student.username }}</code></td>
+                                                    <td><span class="badge bg-light text-dark">{{ student.plain_password or 'N/A' }}</span></td>
+                                                    <td><small class="text-muted">{{ student.created_at.strftime('%Y-%m-%d') }}</small></td>
+                                                    <td>
+                                                        <a href="{{ url_for('delete_user', user_id=student._id) }}" 
+                                                           class="btn btn-danger btn-sm"
+                                                           onclick="return confirm('Delete this student?')">
+                                                            <i class="fas fa-trash"></i>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    {% else %}
+                                        <div class="text-center py-5">
+                                            <i class="fas fa-graduation-cap fa-3x text-muted mb-3"></i>
+                                            <p class="text-muted">No learners enrolled</p>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="card-body" style="max-height: 400px; overflow-y: auto;">
-                        {% if all_students %}
-                        <div class="table-responsive">
-                            <table class="table table-sm table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>Name</th>
-                                        <th>Username</th>
-                                        <th>Password</th>
-                                        <th>Date</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for student in all_students %}
-                                    <tr>
-                                        <td>{{ student.full_name }}</td>
-                                        <td>{{ student.username }}</td>
-                                        <td><span class="text-muted">{{ student.plain_password or 'N/A' }}</span></td>
-                                        <td>{{ student.created_at.strftime('%Y-%m-%d') }}</td>
-                                        <td>
-                                            <a href="{{ url_for('delete_user', user_id=student._id) }}" 
-                                               class="btn btn-danger btn-sm"
-                                               onclick="return confirm('Delete this student?')">
-                                                <i class="fas fa-trash"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                        {% else %}
-                        <p class="text-center text-muted">No students found</p>
-                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -243,6 +336,6 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/admin-effects.js') }}"></script>
 </body>
 </html>
